@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\FotoPessoa;
 use App\Models\Endereco;
 use App\Models\Lotacao;
 use App\Models\ServidorEfetivo;
@@ -31,5 +32,10 @@ class Pessoa extends Model
     public function servidorTemporario()
     {
         return $this->hasMany(ServidorTemporario::class, 'pes_id', 'pes_id');
+    }
+
+    public function fotos()
+    {
+        return $this->hasMany(FotoPessoa::class, 'pes_id');
     }
 }

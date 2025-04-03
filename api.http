@@ -1,5 +1,6 @@
 GET http://localhost:8000/api/pessoas
 Content-Type: application/json
+Authorization: Bearer 1|qlATLpEv1v7yyzDLQcVKE3gh7qpRTlQYxETLZRv8014d318f
 
 
 ###
@@ -13,5 +14,16 @@ Accept: application/json
     "pes_sexo": "M",
     "pes_pai": "Pai do João da Silva",
     "pes_mae": "Mãe do João da Silva"
+}
+
+###
+
+
+POST http://localhost:8000/api/login
+Content-Type: application/json
+
+{
+    "email": "admin@admin.com",
+    "password": "senha"
 }
 

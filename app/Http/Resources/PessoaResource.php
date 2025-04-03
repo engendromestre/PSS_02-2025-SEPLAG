@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Carbon\Carbon;
+use App\Http\Resources\FotoPessoaResource;
 use App\Http\Resources\ServidorEfetivoResource;
 use App\Http\Resources\ServidorTemporarioResource;
 
@@ -20,13 +21,14 @@ class PessoaResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->pes_id,
-            'nome' => $this->pes_nome,
-            'data_nascimento' => $this->pes_data_nascimento,
+            'pes_id' => $this->pes_id,
+            'pes_nome' => $this->pes_nome,
+            'pes_data_nascimento' => $this->pes_data_nascimento,
             'idade' => $this->calcularIdade(),
-            'sexo' => $this->pes_sexo,
-            'mae' => $this->pes_mae,
-            'pai' => $this->pes_pai,
+            'pes_sexo' => $this->pes_sexo,
+            'pes_mae' => $this->pes_mae,
+            'pes_pai' => $this->pes_pai,
+            'fotos' => FotoPessoaResource::collection($this->whenLoaded('fotos')),
             'servidores_efetivos' => ServidorEfetivoResource::collection($this->whenLoaded('servidorEfetivo')),
             'servidores_temporarios' => ServidorTemporarioResource::collection($this->whenLoaded('servidorTemporario')),
             'created_at' => $this->created_at,
