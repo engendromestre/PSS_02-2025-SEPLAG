@@ -10,11 +10,9 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::apiResource('pessoas', PessoaController::class)->except([
-        'create',
-        'show',
-        'edit'
-    ]);
+    Route::get('/pessoas', [PessoaController::class, 'index']);
+    Route::post('/pessoas', [PessoaController::class, 'store']);
 });

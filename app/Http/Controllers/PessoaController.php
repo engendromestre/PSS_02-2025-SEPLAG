@@ -20,8 +20,9 @@ class PessoaController extends Controller
     public function index(Request $request)
     {
 
-        $pessoas = Pessoa::with(['fotos', 'servidorEfetivo', 'servidorTemporario'])
-            ->paginate(10); // Paginação com 10 itens por página
+        $pessoas = Pessoa::query()
+            ->with(['fotos', 'servidorEfetivo', 'servidorTemporario'])
+            ->paginate(10);
 
         return PessoaResource::collection($pessoas);
     }

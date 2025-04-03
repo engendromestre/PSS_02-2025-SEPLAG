@@ -28,9 +28,9 @@ class PessoaResource extends JsonResource
             'pes_sexo' => $this->pes_sexo,
             'pes_mae' => $this->pes_mae,
             'pes_pai' => $this->pes_pai,
-            'fotos' => FotoPessoaResource::collection($this->whenLoaded('fotos')),
-            'servidores_efetivos' => ServidorEfetivoResource::collection($this->whenLoaded('servidorEfetivo')),
-            'servidores_temporarios' => ServidorTemporarioResource::collection($this->whenLoaded('servidorTemporario')),
+            'fotos' => FotoPessoaResource::collection($this->whenLoaded('fotos')) ?? [],
+            'servidores_efetivos' => ServidorEfetivoResource::collection($this->whenLoaded('servidorEfetivo')) ?? [],
+            'servidores_temporarios' => ServidorTemporarioResource::collection($this->whenLoaded('servidorTemporario')) ?? [],
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
@@ -57,13 +57,19 @@ class PessoaResource extends JsonResource
      */
     public static function collection($resource)
     {
-        return parent::collection($resource)->additional([
-            'meta' => [
-                'total' => $resource->total(),
-                'per_page' => $resource->perPage(),
-                'current_page' => $resource->currentPage(),
-                'last_page' => $resource->lastPage(),
-            ],
-        ]);
+        $collection = parent::collection($resource);
+
+        if (method_exists($resource, 'total')) {
+            $collection->additional([
+                'meta' => [
+                    'total' => $resource->total(),
+                    'per_page' => $resource->perPage(),
+                    'current_page' => $resource->currentPage(),
+                    'last_page' => $resource->lastPage(),
+                ],
+            ]);
+        }
+
+        return $collection;
     }
 }
