@@ -1,0 +1,17 @@
+GET http://localhost:8000/api/pessoas
+Content-Type: application/json
+
+
+###
+POST http://localhost:8000/api/pessoas
+Content-Type: application/json
+Accept: application/json
+
+{
+    "pes_nome": "João Silva",
+    "pes_data_nascimento": "1986-02-08",
+    "pes_sexo": "M",
+    "pes_pai": "Pai do João da Silva",
+    "pes_mae": "Mãe do João da Silva"
+}
+
