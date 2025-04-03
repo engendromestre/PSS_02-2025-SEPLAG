@@ -42,10 +42,17 @@ return new class extends Migration
             }
         });
 
-        Schema::table('lotacaos', function (Blueprint $table) {
-            if (Schema::hasColumn('lotacaos', 'pes_id') && Schema::hasColumn('lotacaos', 'unid_id')) {
+        Schema::table('lotacoes', function (Blueprint $table) {
+            if (Schema::hasColumn('lotacoes', 'pes_id') && Schema::hasColumn('lotacoes', 'unid_id')) {
                 $table->foreign('pes_id')->references('pes_id')->on('pessoas')->onDelete('restrict');
                 $table->foreign('unid_id')->references('unid_id')->on('unidades')->onDelete('restrict');
+            }
+        });
+
+        Schema::table('unidade_enderecos', function (Blueprint $table) {
+            if (Schema::hasColumn('unidade_enderecos', 'unid_id') && Schema::hasColumn('unidade_enderecos', 'end_id')) {
+                $table->foreign('unid_id')->references('unid_id')->on('unidades')->onDelete('restrict');
+                $table->foreign('end_id')->references('end_id')->on('enderecos')->onDelete('restrict');
             }
         });
     }
@@ -86,9 +93,16 @@ return new class extends Migration
             }
         });
 
-        Schema::table('lotacaos', function (Blueprint $table) {
+        Schema::table('lotacoes', function (Blueprint $table) {
             if (Schema::hasColumn('lotacaos', 'pes_id') && Schema::hasColumn('lotacaos', 'unid_id')) {
                 $table->dropForeign(['pes_id']);
+                $table->dropForeign(['unid_id']);
+            }
+        });
+
+        Schema::table('unidade_enderecos', function (Blueprint $table) {
+            if (Schema::hasColumn('unidade_enderecos', 'end_id') && Schema::hasColumn('unidade_enderecos', 'unid_id')) {
+                $table->dropForeign(['end_id']);
                 $table->dropForeign(['unid_id']);
             }
         });
