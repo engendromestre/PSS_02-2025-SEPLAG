@@ -1,6 +1,7 @@
 GET http://localhost:8000/api/pessoas
 Content-Type: application/json
-Authorization: Bearer 1|qlATLpEv1v7yyzDLQcVKE3gh7qpRTlQYxETLZRv8014d318f
+Accept: application/json
+Authorization: Bearer 6|bJ4Rxbbvn8FZLaDfmg13jz4XuY9g2c0Lt46jqJNAbdb613f7
 
 
 ###
@@ -28,5 +29,6 @@ Content-Type: application/json
 ###
 POST http://localhost:8000/api/logout
 Content-Type: application/json
+Accept: application/json
 Authorization: Bearer 4|C7zwb8xRYEtIN8JkO030EqDGanc2WFca56senYNW15a0a0a3
 
