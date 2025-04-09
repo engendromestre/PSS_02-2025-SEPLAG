@@ -1,34 +1,66 @@
+
+# @name adminLogin
+POST http://localhost:8000/api/login
+Content-Type: application/json
+
+{
+    "email": "admin@example.com",
+    "password": "senha"
+}
+
+###
+
+# @name editorLogin
+POST http://localhost:8000/api/login
+Content-Type: application/json
+
+{
+    "email": "editor@example.com",
+    "password": "password"
+}
+
+###
+
+# @name userLogin
+POST http://localhost:8000/api/login
+Content-Type: application/json
+
+{
+    "email": "user@example.com",
+    "password": "password"
+}
+
+###
+
+@tokenAdmin = {{ adminLogin.response.body.token }}
+@tokenEditor = {{ editorLogin.response.body.token }}
+@tokenUser = {{ userLogin.response.body.token }}
+
+###
+
 GET http://localhost:8000/api/pessoas
 Content-Type: application/json
 Accept: application/json
-Authorization: Bearer 6|bJ4Rxbbvn8FZLaDfmg13jz4XuY9g2c0Lt46jqJNAbdb613f7
+Authorization: Bearer {{tokenEditor}}
 
 
 ###
 POST http://localhost:8000/api/pessoas
 Content-Type: application/json
 Accept: application/json
+Authorization: Bearer {{tokenEditor}}
 
 {
-    "pes_nome": "João Silva",
+    "pes_nome": "Ana Maria",
     "pes_data_nascimento": "1986-02-08",
     "pes_sexo": "M",
-    "pes_pai": "Pai do João da Silva",
-    "pes_mae": "Mãe do João da Silva"
-}
-
-###
-POST http://localhost:8000/api/login
-Content-Type: application/json
-
-{
-    "email": "admin@admin.com",
-    "password": "senha"
+    "pes_pai": "Pai da Ana Maria",
+    "pes_mae": "Mãe da Ana Maria"
 }
 
 ###
 POST http://localhost:8000/api/logout
 Content-Type: application/json
 Accept: application/json
-Authorization: Bearer 4|C7zwb8xRYEtIN8JkO030EqDGanc2WFca56senYNW15a0a0a3
+Authorization: Bearer {{tokenEditor}}
 

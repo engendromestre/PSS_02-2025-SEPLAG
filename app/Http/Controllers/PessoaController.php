@@ -12,14 +12,31 @@ use Illuminate\Support\Facades\Gate;
 class PessoaController extends Controller
 {
     /**
-     * Display a listing of the resource with pagination.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @OA\Get(
+     *     path="/api/pessoas",
+     *     summary="Listar pessoas",
+     *     tags={"Pessoas"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de pessoas",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/Pessoa")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Não autorizado",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+     *         )
+     *     )
+     * )
      */
     public function index(Request $request)
     {
-
+        // Gate::authorize('view', $pessoa);
         $pessoas = Pessoa::query()
             ->with(['fotos', 'servidorEfetivo', 'servidorTemporario'])
             ->paginate(10);
@@ -36,14 +53,37 @@ class PessoaController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StorePessoaRequest  $request
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Post(
+     *     path="/api/pessoas",
+     *     summary="Cadastrar uma nova pessoa",
+     *     tags={"Pessoas"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/Pessoa")
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Pessoa criada com sucesso",
+     *         @OA\JsonContent(ref="#/components/schemas/Pessoa")
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Erro de validação"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Não autorizado",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+     *         )
+     *     )
+     * )
      */
     public function store(StorePessoaRequest $request)
     {
         $pessoa = Pessoa::create($request->validated());
+        Gate::authorize('store', $pessoa);
 
         return (new PessoaResource($pessoa))
             ->response()
