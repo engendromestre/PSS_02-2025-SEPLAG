@@ -31,7 +31,7 @@
                                 "properties": {
                                     "email": {
                                         "type": "string",
-                                        "example": "admin@admin.com"
+                                        "example": "admin@example.com"
                                     },
                                     "password": {
                                         "type": "string",
@@ -180,17 +180,74 @@
             "Pessoa": {
                 "title": "Pessoa",
                 "properties": {
+                    "pes_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "pes_nome": {
+                        "type": "string",
+                        "example": "Ana Maria"
+                    },
+                    "pes_data_nascimento": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "1986-02-08"
+                    },
+                    "idade": {
+                        "type": "integer",
+                        "example": 39
+                    },
+                    "pes_sexo": {
+                        "type": "string",
+                        "example": "Feminino"
+                    },
+                    "pes_mae": {
+                        "type": "string",
+                        "example": "Mãe da Ana Maria"
+                    },
+                    "pes_pai": {
+                        "type": "string",
+                        "example": "Pai da Ana Maria"
+                    },
+                    "fotos": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    },
+                    "servidores_efetivos": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    },
+                    "servidores_temporarios": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "title": "User",
+                "properties": {
                     "id": {
                         "type": "integer",
                         "example": 1
                     },
-                    "nome": {
+                    "name": {
                         "type": "string",
-                        "example": "João da Silva"
+                        "example": "Admin"
                     },
                     "email": {
                         "type": "string",
-                        "example": "joao@email.com"
+                        "example": "admin@email.com"
+                    },
+                    "role": {
+                        "type": "string",
+                        "example": "admin"
                     },
                     "created_at": {
                         "type": "string",
