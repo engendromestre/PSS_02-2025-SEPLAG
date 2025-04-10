@@ -81,9 +81,18 @@ docker compose exec app php artisan key:generate
 
 ### Usando Swagger (L5-Swagger)
 
+Gere os usuários com seus respectivos papéis
 ```bash
 docker compose exec app php artisan migrate --seed
 ```
+
+### 🧾 Controle de Acesso por Papéis (Roles)
+
+A aplicação usa um campo role na tabela users para definir permissões de acesso. Para efeitos de teste, foram criados um usuário para cada role:
+
+-   admin - admin@example.com | senha
+-   editor - editor@example.com | password
+-   user - user@example.com | password
 
 ### 🔐 Autenticação
 
@@ -106,14 +115,6 @@ Use o token para autenticação nas requisições (Botão Authorize - ícone do 
 ```bash
 Authorization: Bearer seu_token_aqui
 ```
-
-### 🧾 Controle de Acesso por Papéis (Roles)
-
-A aplicação usa um campo role na tabela users para definir permissões de acesso. Para efeitos de teste, foram criados um usuário para cada role:
-
--   admin - admin@example.com | senha
--   editor - editor@example.com | password
--   user - user@example.com | password
 
 ### ✅ Exemplos de rotas
 
