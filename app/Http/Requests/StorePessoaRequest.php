@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Pessoa;
 
 class StorePessoaRequest extends FormRequest
 {
@@ -11,8 +12,7 @@ class StorePessoaRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        //return auth()->check();
-        return true;
+        return $this->user()->can('create', Pessoa::class);
     }
 
     /**
@@ -24,8 +24,13 @@ class StorePessoaRequest extends FormRequest
     {
         return [
             'pes_nome' => 'required|string|max:200',
-            'pes_data_nascimento' => 'required|date',
-            'pes_sexo' => 'required|string|in:M,F',
+            'pes_data_nascimento' => [
+                'required',
+                'date',
+                'before:today',
+                'after:1900-01-01',
+            ],
+            'pes_sexo' => 'required|string|in:Masculino,Feminino',
             'pes_mae' => 'required|string|max:200',
             'pes_pai' => 'required|string|max:200',
         ];

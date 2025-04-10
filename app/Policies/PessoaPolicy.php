@@ -13,7 +13,7 @@ class PessoaPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+         return in_array($user->role, ['admin', 'editor', 'user']);
     }
 
     /**
@@ -37,7 +37,7 @@ class PessoaPolicy
      */
     public function update(User $user, Pessoa $pessoa): bool
     {
-        return false;
+        return in_array($user->role, ['admin', 'editor']);
     }
 
     /**
@@ -45,7 +45,7 @@ class PessoaPolicy
      */
     public function delete(User $user, Pessoa $pessoa): bool
     {
-        return false;
+        return in_array($user->role, ['admin', 'editor']);
     }
 
     /**

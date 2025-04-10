@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class FotoPessoa extends Model
 {
+    protected $table = 'fotos_pessoas';
+    protected $fillable = ['pes_id','path'];
+    protected $appends = ['url']; // Accessor para gerar a URL da imagem
+
     /**
      * Get the pessoa that owns the foto pessoa.
      *
@@ -19,5 +23,13 @@ class FotoPessoa extends Model
     public function pessoa()
     {
         return $this->belongsTo(Pessoa::class, 'pes_id', 'pes_id');
+    }
+
+    public function getUrlAttribute()
+    {
+        return Storage::disk('minio')->temporaryUrl(
+            $this->path,
+            now()->addMinutes(10) // URL válida por 10 minutos
+        );
     }
 }

@@ -23,14 +23,16 @@ class PessoaResource extends JsonResource
         return [
             'pes_id' => $this->pes_id,
             'pes_nome' => $this->pes_nome,
-            'pes_data_nascimento' => $this->pes_data_nascimento,
+            'pes_data_nascimento' => $this->pes_data_nascimento
+                ? Carbon::parse($this->pes_data_nascimento)->format('d/m/Y')
+                : null,
             'idade' => $this->calcularIdade(),
             'pes_sexo' => $this->pes_sexo,
             'pes_mae' => $this->pes_mae,
             'pes_pai' => $this->pes_pai,
-            'fotos' => FotoPessoaResource::collection($this->whenLoaded('fotos')) ?? [],
-            'servidores_efetivos' => ServidorEfetivoResource::collection($this->whenLoaded('servidorEfetivo')) ?? [],
-            'servidores_temporarios' => ServidorTemporarioResource::collection($this->whenLoaded('servidorTemporario')) ?? [],
+            'fotos' => FotoPessoaResource::collection($this->whenLoaded('fotos')),
+            'servidores_efetivos' => ServidorEfetivoResource::collection($this->whenLoaded('servidorEfetivo')),
+            'servidores_temporarios' => ServidorTemporarioResource::collection($this->whenLoaded('servidorTemporario')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

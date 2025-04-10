@@ -50,7 +50,9 @@ return [
         ],
     ],
     'defaults' => [
-        'headers' => [],
+        'headers' => [
+            'Accept' => 'application/json',
+        ],
         'routes' => [
             /*
              * Route for accessing parsed swagger annotations.

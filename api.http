@@ -43,24 +43,55 @@ Content-Type: application/json
 Accept: application/json
 Authorization: Bearer {{tokenEditor}}
 
+###
+
+GET http://localhost:8000/api/pessoas/3
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{tokenUser}}
+
 
 ###
 POST http://localhost:8000/api/pessoas
 Content-Type: application/json
 Accept: application/json
+Authorization: Bearer {{tokenUser}}
+
+{
+    "pes_nome": "Nara Laiane",
+    "pes_data_nascimento": "1942-10-12",
+    "pes_sexo": "Masculino",
+    "pes_pai": "Pai de Nara Laiane",
+    "pes_mae": "Mãe de Nara Laiane"
+}
+
+
+###
+
+
+PUT http://localhost:8000/api/pessoas/4
+Content-Type: application/json
+Accept: application/json
 Authorization: Bearer {{tokenEditor}}
 
 {
-    "pes_nome": "Ana Maria",
-    "pes_data_nascimento": "1986-02-08",
-    "pes_sexo": "M",
-    "pes_pai": "Pai da Ana Maria",
-    "pes_mae": "Mãe da Ana Maria"
+    "pes_nome": "Nara Laiane Oliveira",
+    "pes_data_nascimento": "1942-10-12",
+    "pes_sexo": "Feminino",
+    "pes_pai": "Pai de Nara Laiane Oliveira",
+    "pes_mae": "Mãe de Nara Laiane Oliveira"
 }
+
+
+###
+DELETE http://localhost:8000/api/pessoas/4
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{tokenEditor}}
 
 ###
 POST http://localhost:8000/api/logout
 Content-Type: application/json
 Accept: application/json
-Authorization: Bearer {{tokenEditor}}
+Authorization: Bearer {{tokenAdmin}}
 

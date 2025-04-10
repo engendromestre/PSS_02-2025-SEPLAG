@@ -173,10 +173,256 @@
                     }
                 ]
             }
+        },
+        "/api/pessoas/{id}": {
+            "get": {
+                "tags": [
+                    "Pessoas"
+                ],
+                "summary": "Exibir uma pessoa pelo ID",
+                "operationId": "9767860b5875b66fc3535a00d47aec2d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID da pessoa",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Pessoa encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Pessoa"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Ação não permitida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "This action is unauthorized."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Pessoa não encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No query results for model [Pessoa] 1"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Pessoas"
+                ],
+                "summary": "Atualizar uma pessoa pelo ID",
+                "operationId": "da7d1255c980a411d322994cbca98632",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID da pessoa",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Pessoa"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Pessoa atualizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Pessoa"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Não autorizado"
+                    },
+                    "404": {
+                        "description": "Pessoa não encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Pessoas"
+                ],
+                "summary": "Excluir uma pessoa pelo ID",
+                "operationId": "6ac497549c4c86a2d7bbd144d43dffb3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID da pessoa",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Pessoa excluída com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Ação não permitida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "This action is unauthorized."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Pessoa não encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No query results for model [Pessoa] 1"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
         "schemas": {
+            "FotoPessoa": {
+                "title": "Foto da Pessoa",
+                "properties": {
+                    "fp_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "pes_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "fp_data": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2024-01-15"
+                    },
+                    "fp_bucket": {
+                        "type": "string",
+                        "example": "bucket-exemplo"
+                    },
+                    "fp_hash": {
+                        "type": "string",
+                        "example": "hash_exemplo_123456"
+                    }
+                },
+                "type": "object"
+            },
             "Pessoa": {
                 "title": "Pessoa",
                 "properties": {
@@ -212,7 +458,7 @@
                     "fotos": {
                         "type": "array",
                         "items": {
-                            "type": "object"
+                            "$ref": "#/components/schemas/FotoPessoa"
                         }
                     },
                     "servidores_efetivos": {
@@ -226,6 +472,40 @@
                         "items": {
                             "type": "object"
                         }
+                    }
+                },
+                "type": "object"
+            },
+            "ServidorEfetivo": {
+                "title": "Servidor Efetivo",
+                "properties": {
+                    "pes_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "se_matricula": {
+                        "type": "string",
+                        "example": "20241234"
+                    }
+                },
+                "type": "object"
+            },
+            "ServidorTemporario": {
+                "title": "Servidor Temporário",
+                "properties": {
+                    "pes_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "st_data_admissao": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2023-05-01"
+                    },
+                    "st_data_demissao": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2024-04-01"
                     }
                 },
                 "type": "object"

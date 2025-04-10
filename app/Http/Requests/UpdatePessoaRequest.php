@@ -11,7 +11,7 @@ class UpdatePessoaRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return $this->user()->can('update', $this->route('pessoa'));
     }
 
     /**
@@ -22,7 +22,16 @@ class UpdatePessoaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'pes_nome' => 'required|string|max:200',
+            'pes_data_nascimento' => [
+                'required',
+                'date',
+                'before:today',
+                'after:1900-01-01',
+            ],
+            'pes_sexo' => 'required|string|in:Masculino,Feminino',
+            'pes_mae' => 'required|string|max:200',
+            'pes_pai' => 'required|string|max:200',
         ];
     }
 }
