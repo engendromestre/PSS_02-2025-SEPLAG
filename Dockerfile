@@ -1,25 +1,28 @@
-FROM php:8.2-fpm
+FROM php:8.3-fpm-alpine
 
 # Instala extensões e dependências
-RUN apt-get update && apt-get install -y \
+RUN apk update && apk add --no-cache \
     libpq-dev \
     unzip \
     curl \
+    bash \
     && docker-php-ext-install pdo pdo_pgsql
 
 # Instala Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Define o diretório de trabalho
+# Define diretório de trabalho
 WORKDIR /var/www/html
 
-# Copia os arquivos do Laravel
+# Copia os arquivos da aplicação (serão sobrescritos pelo volume, mas serve pro build)
 COPY . .
 
-# Instala as dependências do Laravel
-RUN composer install --no-dev --optimize-autoloader
+# Script de inicialização
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-# Ajusta permissões
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# Permissões de cache
+RUN mkdir -p storage bootstrap/cache && \
+    chown -R www-data:www-data storage bootstrap/cache
 
-CMD ["php-fpm"]
+CMD ["/entrypoint.sh"]
