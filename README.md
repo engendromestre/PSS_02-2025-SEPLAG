@@ -88,7 +88,9 @@ Usuário: **minioadmin**
 Senha: **minioadmin**
 
 ### 7. Configure o  MinIO:
-Crie o bucket fotos e configure uma policy conforme abaixo:
+Crie o bucket fotos
+
+Crie a policy photo-access conforme abaixo:
 ```json
 {
   "Version": "2012-10-17",
@@ -106,7 +108,13 @@ Crie o bucket fotos e configure uma policy conforme abaixo:
   ]
 }
 ```
-Em seguida, crie o usuário appuser e vincule a policy fotos-access a ele.
+Em seguida, crie o usuário appuser e vincule a policy  photo-access a ele.
+
+Adicione mais 2 variáveis de ambiente
+```bash
+AWS_ACCESS_KEY_ID=appuser
+AWS_SECRET_ACCESS_KEY=appUserPassword
+```
 
 ## 🧪 Como testar a API
 
