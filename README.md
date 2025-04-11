@@ -31,6 +31,7 @@
 -   Docker
 -   Docker Compose
 -   Git
+-   Opcional: (humao.rest-client - Extensão do VSCode)
 
 ## 🚀 Como executar o projeto
 
@@ -70,12 +71,42 @@ MINIO_ENDPOINT=http://minio:9000
 MINIO_ACCESS_KEY=minioadmin
 MINIO_SECRET_KEY=minioadmin
 MINIO_BUCKET=fotos
+```
 
 ### 5. Gere a chave da aplicação
 
 ```bash
 docker compose exec app php artisan key:generate
 ```
+
+### 6. Acesse o painel administrativo do MinIO:
+
+http://localhost:9001
+
+Usuário: **minioadmin**
+
+Senha: **minioadmin**
+
+### 7. Configure o  MinIO:
+Crie o bucket fotos e configure uma policy conforme abaixo:
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+      {
+          "Effect": "Allow",
+          "Action": [
+              "s3:GetObject",
+              "s3:PutObject"
+          ],
+          "Resource": [
+              "arn:aws:s3:::fotos/*"
+          ]
+      }
+  ]
+}
+```
+Em seguida, crie o usuário appuser e vincule a policy fotos-access a ele.
 
 ## 🧪 Como testar a API
 
