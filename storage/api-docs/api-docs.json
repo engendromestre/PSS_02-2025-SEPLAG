@@ -76,13 +76,89 @@
                 ]
             }
         },
+        "/api/fotos": {
+            "post": {
+                "tags": [
+                    "FotoPessoa"
+                ],
+                "summary": "Fazer upload de uma ou mais fotos para uma pessoa",
+                "description": "Upload de múltiplas fotos associadas a uma pessoa.",
+                "operationId": "uploadFotosPessoa",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "pes_id",
+                                    "fotos"
+                                ],
+                                "properties": {
+                                    "pes_id": {
+                                        "description": "ID da pessoa",
+                                        "type": "integer"
+                                    },
+                                    "fotos": {
+                                        "description": "Arquivos de imagem para upload",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Fotos salvas com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/FotoPessoa"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/pessoas": {
             "get": {
                 "tags": [
-                    "Pessoas"
+                    "Pessoa"
                 ],
                 "summary": "Listar pessoas",
                 "operationId": "7c7d2c9decc48109bcd470035e629ecb",
+                "parameters": [
+                    {
+                        "name": "expira_em",
+                        "in": "query",
+                        "description": "Tempo de expiração da URL da imagem em minutos",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Lista de pessoas",
@@ -122,7 +198,7 @@
             },
             "post": {
                 "tags": [
-                    "Pessoas"
+                    "Pessoa"
                 ],
                 "summary": "Cadastrar uma nova pessoa",
                 "operationId": "b72258a0649966eb7cb39a9fdc67bf4b",
@@ -177,7 +253,7 @@
         "/api/pessoas/{id}": {
             "get": {
                 "tags": [
-                    "Pessoas"
+                    "Pessoa"
                 ],
                 "summary": "Exibir uma pessoa pelo ID",
                 "operationId": "9767860b5875b66fc3535a00d47aec2d",
@@ -189,6 +265,16 @@
                         "required": true,
                         "schema": {
                             "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "expira_em",
+                        "in": "query",
+                        "description": "Tempo de expiração da URL da imagem em minutos",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10
                         }
                     }
                 ],
@@ -260,7 +346,7 @@
             },
             "put": {
                 "tags": [
-                    "Pessoas"
+                    "Pessoa"
                 ],
                 "summary": "Atualizar uma pessoa pelo ID",
                 "operationId": "da7d1255c980a411d322994cbca98632",
@@ -311,7 +397,7 @@
             },
             "delete": {
                 "tags": [
-                    "Pessoas"
+                    "Pessoa"
                 ],
                 "summary": "Excluir uma pessoa pelo ID",
                 "operationId": "6ac497549c4c86a2d7bbd144d43dffb3",
@@ -397,28 +483,41 @@
     "components": {
         "schemas": {
             "FotoPessoa": {
-                "title": "Foto da Pessoa",
+                "title": "FotoPessoa",
+                "required": [
+                    "id",
+                    "pes_id",
+                    "url",
+                    "url_temporaria"
+                ],
                 "properties": {
-                    "fp_id": {
+                    "id": {
                         "type": "integer",
                         "example": 1
                     },
                     "pes_id": {
                         "type": "integer",
-                        "example": 1
+                        "example": 12
                     },
-                    "fp_data": {
+                    "url": {
                         "type": "string",
-                        "format": "date",
-                        "example": "2024-01-15"
+                        "format": "uri",
+                        "example": "https://minio.local/fotos_pessoas/12/foto1.jpg"
                     },
-                    "fp_bucket": {
+                    "url_temporaria": {
                         "type": "string",
-                        "example": "bucket-exemplo"
+                        "format": "uri",
+                        "example": "http://localhost:9000/fotos_pessoas/12/foto1.jpg?X-Amz-Expires=600&X-Amz-Signature=abc123..."
                     },
-                    "fp_hash": {
+                    "created_at": {
                         "type": "string",
-                        "example": "hash_exemplo_123456"
+                        "format": "date-time",
+                        "example": "2025-04-10T14:48:00.000Z"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-04-10T14:50:00.000Z"
                     }
                 },
                 "type": "object"
@@ -458,7 +557,7 @@
                     "fotos": {
                         "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/FotoPessoa"
+                            "type": "object"
                         }
                     },
                     "servidores_efetivos": {
@@ -555,8 +654,12 @@
             "description": "Autenticação"
         },
         {
-            "name": "Pessoas",
-            "description": "Pessoas"
+            "name": "FotoPessoa",
+            "description": "FotoPessoa"
+        },
+        {
+            "name": "Pessoa",
+            "description": "Pessoa"
         }
     ],
     "security": {

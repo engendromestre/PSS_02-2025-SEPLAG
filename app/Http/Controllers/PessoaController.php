@@ -15,8 +15,15 @@ class PessoaController extends Controller
      * @OA\Get(
      *     path="/api/pessoas",
      *     summary="Listar pessoas",
-     *     tags={"Pessoas"},
+     *     tags={"Pessoa"},
      *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="expira_em",
+     *         in="query",
+     *         required=false,
+     *         description="Tempo de expiração da URL da imagem em minutos",
+     *         @OA\Schema(type="integer", default=10)
+     *     ), 
      *     @OA\Response(
      *         response=200,
      *         description="Lista de pessoas",
@@ -41,14 +48,22 @@ class PessoaController extends Controller
             ->with(['fotos', 'servidorEfetivo', 'servidorTemporario'])
             ->paginate(10);
 
-        return PessoaResource::collection($pessoas);
+        $expiraEm = $request->query('expira_em', 10);
+        if ($request->has('expira_em')) {
+            $expiraEm = (int) $request->query('expira_em');
+        }
+        return PessoaResource::collection(
+            $pessoas->map(function ($pessoa) use ($expiraEm) {
+                return (new PessoaResource($pessoa))->setExpiracao($expiraEm);
+            })
+        );
     }
 
     /**
      * @OA\Post(
      *     path="/api/pessoas",
      *     summary="Cadastrar uma nova pessoa",
-     *     tags={"Pessoas"},
+     *     tags={"Pessoa"},
      *     security={{"bearerAuth":{}}},
      *     @OA\RequestBody(
      *         required=true,
@@ -85,7 +100,7 @@ class PessoaController extends Controller
      * @OA\Get(
      *     path="/api/pessoas/{id}",
      *     summary="Exibir uma pessoa pelo ID",
-     *     tags={"Pessoas"},
+     *     tags={"Pessoa"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
@@ -93,6 +108,13 @@ class PessoaController extends Controller
      *         required=true,
      *         description="ID da pessoa",
      *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="expira_em",
+     *         in="query",
+     *         required=false,
+     *         description="Tempo de expiração da URL da imagem em minutos",
+     *         @OA\Schema(type="integer", default=10)
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -122,17 +144,18 @@ class PessoaController extends Controller
      *     )
      * )
      */
-    public function show(Pessoa $pessoa)
+    public function show(Request $request, Pessoa $pessoa)
     {
         Gate::authorize('view', $pessoa);
-        return new PessoaResource($pessoa->load(['fotos','servidorEfetivo', 'servidorTemporario']));
+        $expiraEm = $request->query('expira_em', 10);
+        return (new PessoaResource($pessoa->load(['fotos', 'servidorEfetivo', 'servidorTemporario'])))->setExpiracao($expiraEm);
     }
 
     /**
      * @OA\Put(
      *     path="/api/pessoas/{id}",
      *     summary="Atualizar uma pessoa pelo ID",
-     *     tags={"Pessoas"},
+     *     tags={"Pessoa"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
@@ -167,7 +190,7 @@ class PessoaController extends Controller
      * @OA\Delete(
      *     path="/api/pessoas/{id}",
      *     summary="Excluir uma pessoa pelo ID",
-     *     tags={"Pessoas"},
+     *     tags={"Pessoa"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",

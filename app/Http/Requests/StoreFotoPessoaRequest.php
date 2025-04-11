@@ -12,7 +12,7 @@ class StoreFotoPessoaRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        $pessoa = Pessoa::find($this->pes_id);
+        $pessoa = $this->route('pessoa');
         return $pessoa && auth()->user()->can('update', $pessoa);
     }
 
@@ -24,7 +24,7 @@ class StoreFotoPessoaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'pes_id' => ['required', 'exists:pessoas,pes_id'],
+            // 'pes_id' => ['required', 'exists:pessoas,pes_id'],
             'fotos' => ['required', 'array', 'min:1', 'max:10'], // deve ser um array de arquivos
             'fotos.*' => ['required', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'], // até 5MB por imagem
         ];

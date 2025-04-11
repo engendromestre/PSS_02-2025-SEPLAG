@@ -20,7 +20,7 @@ use OpenApi\Annotations as OA;
  *     @OA\Property(
  *         property="fotos",
  *         type="array",
- *         @OA\Items(ref="#/components/schemas/FotoPessoa")
+ *         @OA\Items(type="object")
  *     ),
  *     
  *     @OA\Property(

@@ -2,12 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pessoa;
 use App\Models\FotoPessoa;
+use App\Services\FotoPessoaService;
+use App\Http\Resources\PessoaResource;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreFotoPessoaRequest;
+use Illuminate\Support\Facades\Gate;
 
 class FotoPessoaController extends Controller
 {
+    private $fotoPessoaService;
+
+    public function __construct(FotoPessoaService $fotoPessoaService)
+    {
+        $this->fotoPessoaService = $fotoPessoaService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -24,32 +35,71 @@ class FotoPessoaController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
+   /**
+     * @OA\Post(
+     *     path="/api/fotos",
+     *     summary="Fazer upload de uma ou mais fotos para uma pessoa",
+     *     description="Upload de múltiplas fotos associadas a uma pessoa.",
+     *     operationId="uploadFotosPessoa",
+     *     tags={"FotoPessoa"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 required={"pes_id", "fotos"},
+     *                 @OA\Property(
+     *                     property="pes_id",
+     *                     type="integer",
+     *                     description="ID da pessoa"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="fotos",
+     *                     type="array",
+     *                     @OA\Items(
+     *                         type="string",
+     *                         format="binary"
+     *                     ),
+     *                     description="Arquivos de imagem para upload"
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Fotos salvas com sucesso",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/FotoPessoa")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Erro de validação"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Não autorizado"
+     *     )
+     * )
      */
-    public function store(StoreFotoPessoaRequest $request)
+    public function store(StoreFotoPessoaRequest $request, Pessoa $pessoa)
     {
-         $fotosCriadas = [];
-         $folder = "fotos_pessoas/{$request->pes_id}";
+        Gate::authorize('update', $pessoa);
+        
+        try {
+            $fotos = $this->fotoPessoaService->armazenarFotos($request->file('fotos'),  $pessoa->pes_id);
 
-          foreach ($request->file('fotos') as $foto) {
-            // Gera um nome de arquivo único e sanitizado
-            $filename = uniqid('foto_', true) . '.' . $foto->getClientOriginalExtension();
+            return FotoPessoaResource::collection(collect($fotos));
+        } catch (Exception $e) {
+            Log::error("Erro ao fazer upload das fotos: {$e->getMessage()}");
 
-            // Salva no bucket MinIO
-            $path = $foto->storeAs($folder, $filename, 'minio');
-            $url = Storage::disk('minio')->url($path);
-
-            // Cria o registro no banco
-            $fotoPessoa = FotoPessoa::create([
-                'pes_id' => $request->pes_id,
-                'url' => $url,
-            ]);
-
-            $fotosCriadas[] = $fotoPessoa;
+            return response()->json([
+                'message' => 'Erro ao fazer upload das fotos.',
+                'detalhes' => $e->getMessage()
+            ], 500);
         }
-
-        return FotoPessoaResource::collection(collect($fotosCriadas));
     }
 
     /**

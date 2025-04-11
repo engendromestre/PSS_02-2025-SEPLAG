@@ -12,6 +12,14 @@ use App\Http\Resources\ServidorTemporarioResource;
 
 class PessoaResource extends JsonResource
 {
+    protected int $expiracaoMinutos = 10;
+
+    public function setExpiracao(int $minutos): self
+    {
+        $this->expiracaoMinutos = $minutos;
+        return $this;
+    }
+
     /**
      * Transform the resource into an array.
      *
@@ -30,7 +38,13 @@ class PessoaResource extends JsonResource
             'pes_sexo' => $this->pes_sexo,
             'pes_mae' => $this->pes_mae,
             'pes_pai' => $this->pes_pai,
-            'fotos' => FotoPessoaResource::collection($this->whenLoaded('fotos')),
+            'fotos' => FotoPessoaResource::collection(
+                $this->whenLoaded('fotos', function () {
+                    return $this->fotos->map(function ($foto) {
+                        return (new FotoPessoaResource($foto))->setExpiracao($this->expiracaoMinutos);
+                    });
+                })
+            ),
             'servidores_efetivos' => ServidorEfetivoResource::collection($this->whenLoaded('servidorEfetivo')),
             'servidores_temporarios' => ServidorTemporarioResource::collection($this->whenLoaded('servidorTemporario')),
             'created_at' => $this->created_at,

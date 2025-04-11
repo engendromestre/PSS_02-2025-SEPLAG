@@ -4,9 +4,18 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class FotoPessoaResource extends JsonResource
 {
+     protected int $expiracaoMinutos = 10;
+
+    public function setExpiracao(int $minutos): self
+    {
+        $this->expiracaoMinutos = $minutos;
+        return $this;
+    }
+
     /**
      * Transform the resource into an array.
      *
@@ -18,10 +27,17 @@ class FotoPessoaResource extends JsonResource
             'id' => $this->fp_id,
             'pessoa' => $this->pes_id,
             'fp_data' => $this->fp_data,
-            'fp_bucket' => $this->fp_bucket,
-            'fp_hash' => $this->fp_hash,
+            'url_temporaria' => $this->gerarUrlTemporaria(),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
+    }
+
+    protected function gerarUrlTemporaria(): string
+    {
+        return Storage::disk('minio')->temporaryUrl(
+            $this->url,
+            now()->addMinutes($this->expiracaoMinutos) // tempo de validade (ajustável)
+        );
     }
 }

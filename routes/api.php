@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\PessoaController;
+use App\Http\Controllers\FotoPessoaController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,16 +15,16 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanc
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::middleware('checkRole:admin,editor')->group(function () {
-        Route::post('/pessoas', [PessoaController::class, 'store']);
-        Route::put('/pessoas/{pessoa}', [PessoaController::class, 'update']);
-        Route::delete('/pessoas/{pessoa}', [PessoaController::class, 'destroy']);
+        Route::post('/pessoas', [PessoaController::class, 'store'])->name('pessoas.store');
+        Route::put('/pessoas/{pessoa}', [PessoaController::class, 'update'])->name('pessoas.update');
+        Route::delete('/pessoas/{pessoa}', [PessoaController::class, 'destroy'])->name('pessoas.destroy');
         
-        Route::post('/fotos-pessoas', [FotoPessoaController::class, 'store']);
+        Route::post('/pessoas/{pessoa}/fotos', [FotoPessoaController::class, 'store'])->name('pessoas.fotos.store');
     });
 
     Route::middleware('checkRole:admin,editor,user')->group(function () {
-        Route::get('/pessoas', [PessoaController::class, 'index']);
-        Route::get('/pessoas/{pessoa}', [PessoaController::class, 'show']);
+        Route::get('/pessoas', [PessoaController::class, 'index'])->name('pessoas.index');
+        Route::get('/pessoas/{pessoa}', [PessoaController::class, 'show'])->name('pessoas.show');
     });
 });
 

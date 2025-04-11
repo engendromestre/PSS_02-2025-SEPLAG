@@ -41,21 +41,21 @@ Content-Type: application/json
 GET http://localhost:8000/api/pessoas
 Content-Type: application/json
 Accept: application/json
-Authorization: Bearer {{tokenEditor}}
+Authorization: Bearer {{tokenAdmin}}
 
 ###
 
-GET http://localhost:8000/api/pessoas/3
+GET http://localhost:8000/api/pessoas/1
 Content-Type: application/json
 Accept: application/json
-Authorization: Bearer {{tokenUser}}
+Authorization: Bearer {{tokenAdmin}}
 
 
 ###
 POST http://localhost:8000/api/pessoas
 Content-Type: application/json
 Accept: application/json
-Authorization: Bearer {{tokenUser}}
+Authorization: Bearer {{tokenAdmin}}
 
 {
     "pes_nome": "Nara Laiane",
@@ -69,10 +69,10 @@ Authorization: Bearer {{tokenUser}}
 ###
 
 
-PUT http://localhost:8000/api/pessoas/4
+PUT http://localhost:8000/api/pessoas/1
 Content-Type: application/json
 Accept: application/json
-Authorization: Bearer {{tokenEditor}}
+Authorization: Bearer {{tokenAdmin}}
 
 {
     "pes_nome": "Nara Laiane Oliveira",
@@ -95,3 +95,20 @@ Content-Type: application/json
 Accept: application/json
 Authorization: Bearer {{tokenAdmin}}
 
+### 
+# @name uploadFotos
+POST http://localhost:8000/api/pessoas/1/fotos
+Authorization: Bearer {{tokenAdmin}}
+Accept: application/json
+Content-Type: multipart/form-data; boundary=---011000010111000001101001
+
+-----011000010111000001101001
+Content-Disposition: form-data; name="pes_id"
+
+2
+-----011000010111000001101001
+Content-Disposition: form-data; name="fotos[]"; filename="foto1.jpg"
+Content-Type: image/jpeg
+
+< ./tests/images/photo1.jpg
+-----011000010111000001101001--

@@ -7,13 +7,15 @@ use OpenApi\Annotations as OA;
 /**
  * @OA\Schema(
  *     schema="FotoPessoa",
- *     title="Foto da Pessoa",
  *     type="object",
- *     @OA\Property(property="fp_id", type="integer", example=1),
- *     @OA\Property(property="pes_id", type="integer", example=1),
- *     @OA\Property(property="fp_data", type="string", format="date", example="2024-01-15"),
- *     @OA\Property(property="fp_bucket", type="string", example="bucket-exemplo"),
- *     @OA\Property(property="fp_hash", type="string", example="hash_exemplo_123456")
+ *     title="FotoPessoa",
+ *     required={"id", "pes_id", "url", "url_temporaria"},
+ *     @OA\Property(property="id", type="integer", example=1),
+ *     @OA\Property(property="pes_id", type="integer", example=12),
+ *     @OA\Property(property="url", type="string", format="uri", example="https://minio.local/fotos_pessoas/12/foto1.jpg"),
+ *     @OA\Property(property="url_temporaria", type="string", format="uri", example="http://localhost:9000/fotos_pessoas/12/foto1.jpg?X-Amz-Expires=600&X-Amz-Signature=abc123..."),
+ *     @OA\Property(property="created_at", type="string", format="date-time", example="2025-04-10T14:48:00.000Z"),
+ *     @OA\Property(property="updated_at", type="string", format="date-time", example="2025-04-10T14:50:00.000Z")
  * )
  */
 class FotoPessoaSchema {}

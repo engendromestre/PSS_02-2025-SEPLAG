@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('foto_pessoas', function (Blueprint $table) {
-            if (Schema::hasColumn('foto_pessoas', 'pes_id')) {
+        Schema::table('fotos_pessoas', function (Blueprint $table) {
+            if (Schema::hasColumn('fotos_pessoas', 'pes_id')) {
                 $table->foreign('pes_id')->references('pes_id')->on('pessoas')->onDelete('restrict');
             }
         });
@@ -62,8 +62,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('foto_pessoas', function (Blueprint $table) {
-            if (Schema::hasColumn('foto_pessoas', 'pes_id')) {
+        Schema::table('fotos_pessoas', function (Blueprint $table) {
+            if (Schema::hasColumn('fotos_pessoas', 'pes_id')) {
                 $table->dropForeign(['pes_id']);
             }
         });
@@ -75,7 +75,7 @@ return new class extends Migration
         });
 
         Schema::table('pessoa_enderecos', function (Blueprint $table) {
-            if (Schema::hasColumn('foto_pessoas', 'pes_id') && Schema::hasColumn('foto_pessoas', 'end_id')) {
+            if (Schema::hasColumn('pessoa_enderecos', 'pes_id') && Schema::hasColumn('pes_id', 'end_id')) {
                 $table->dropForeign(['pes_id']);
                 $table->dropForeign(['end_id']);
             }
