@@ -34,18 +34,17 @@
 
 ## 🚀 Como executar o projeto
 
-### 1. Clone o repositório e inicie o docker compose
+### 1. Clone o repositório 
 
 ```bash
 git clone https://github.com/engendromestre/PSS_02-2025-SEPLAG.git api-php
 cd api-php
-docker compose up
 ```
 
-### 2. Instale as dependências
+### 2. Inicie o docker compose
 
 ```bash
-docker compose exec app composer install
+docker compose up
 ```
 
 ### 3. Copie e configure o .env
