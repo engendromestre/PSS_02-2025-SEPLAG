@@ -35,9 +35,6 @@ class FotoPessoaResource extends JsonResource
 
     protected function gerarUrlTemporaria(): string
     {
-        return Storage::disk('minio')->temporaryUrl(
-            $this->url,
-            now()->addMinutes($this->expiracaoMinutos) // tempo de validade (ajustável)
-        );
+        return $this->resource->gerarUrlTemporaria($this->expiracaoMinutos);
     }
 }

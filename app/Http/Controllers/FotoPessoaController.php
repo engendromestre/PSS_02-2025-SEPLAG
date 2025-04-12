@@ -6,6 +6,7 @@ use App\Models\Pessoa;
 use App\Models\FotoPessoa;
 use App\Services\FotoPessoaService;
 use App\Http\Resources\PessoaResource;
+use App\Http\Resources\FotoPessoaResource;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreFotoPessoaRequest;
 use Illuminate\Support\Facades\Gate;

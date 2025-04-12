@@ -4,11 +4,13 @@ namespace App\Models;
 
 use App\Models\Pessoa;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class FotoPessoa extends Model
 {
     protected $table = 'fotos_pessoas';
-    protected $fillable = ['pes_id','path'];
+    protected $primaryKey = 'fp_id';
+    protected $fillable = ['pes_id', 'fp_data', 'fp_bucket', 'fp_hash'];
     protected $appends = ['url']; // Accessor para gerar a URL da imagem
 
     /**
@@ -25,11 +27,11 @@ class FotoPessoa extends Model
         return $this->belongsTo(Pessoa::class, 'pes_id', 'pes_id');
     }
 
-    public function getUrlAttribute()
+    public function gerarUrlTemporaria(int $minutos = 10): string
     {
         return Storage::disk('minio')->temporaryUrl(
-            $this->path,
-            now()->addMinutes(10) // URL válida por 10 minutos
+            $this->fp_hash,
+            now()->addMinutes($minutos)
         );
     }
 }
