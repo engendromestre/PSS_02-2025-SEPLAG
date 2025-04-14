@@ -34,16 +34,6 @@ services:
     depends_on:
       - postgres
       - minio
-    environment:
-      DB_CONNECTION: pgsql
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_DATABASE: mydatabase
-      DB_USERNAME: admin
-      DB_PASSWORD: admin
-      MINIO_ENDPOINT: http://minio:9000
-      MINIO_ACCESS_KEY: minioadmin
-      MINIO_SECRET_KEY: minioadmin
     ports:
       - "8000:8000"
     volumes:
