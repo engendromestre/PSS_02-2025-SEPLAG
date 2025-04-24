@@ -76,38 +76,53 @@
                 ]
             }
         },
-        "/api/fotos": {
+        "/api/pessoas/{pessoa}/fotos": {
             "post": {
                 "tags": [
                     "FotoPessoa"
                 ],
                 "summary": "Fazer upload de uma ou mais fotos para uma pessoa",
-                "description": "Upload de múltiplas fotos associadas a uma pessoa.",
+                "description": "Upload de múltiplas fotos associadas a uma pessoa. Permitido de 1 a 10 imagens.",
                 "operationId": "uploadFotosPessoa",
+                "parameters": [
+                    {
+                        "name": "pessoa",
+                        "in": "path",
+                        "description": "ID da pessoa",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
                         "multipart/form-data": {
                             "schema": {
                                 "required": [
-                                    "pes_id",
-                                    "fotos"
+                                    "fotos[]"
                                 ],
                                 "properties": {
-                                    "pes_id": {
-                                        "description": "ID da pessoa",
-                                        "type": "integer"
-                                    },
-                                    "fotos": {
-                                        "description": "Arquivos de imagem para upload",
+                                    "fotos[]": {
+                                        "description": "Array de imagens (máx: 10 arquivos, 5MB cada)",
                                         "type": "array",
                                         "items": {
+                                            "description": "Arquivo de imagem (JPEG, PNG, JPG ou WEBP, máx: 5MB)",
                                             "type": "string",
                                             "format": "binary"
-                                        }
+                                        },
+                                        "maxItems": 10,
+                                        "minItems": 1
                                     }
                                 },
                                 "type": "object"
+                            },
+                            "encoding": {
+                                "fotos[]": {
+                                    "style": "form",
+                                    "explode": true
+                                }
                             }
                         }
                     }
@@ -127,10 +142,29 @@
                         }
                     },
                     "422": {
-                        "description": "Erro de validação"
+                        "description": "Erro de validação",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The fotos field is required."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "Não autorizado"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
                     }
                 },
                 "security": [

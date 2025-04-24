@@ -66,7 +66,7 @@ return [
             'secret' => env('MINIO_SECRET_KEY', 'minioadmin'),
             'region' => 'us-east-1',
             'bucket' => env('MINIO_BUCKET', 'fotos'),
-            'endpoint' => env('MINIO_ENDPOINT','http://localhost:9000'),
+            'endpoint' => env('MINIO_ENDPOINT'),
             'use_path_style_endpoint' => true,
         ],
     ],

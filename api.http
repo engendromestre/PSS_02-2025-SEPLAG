@@ -95,7 +95,7 @@ Content-Type: application/json
 Accept: application/json
 Authorization: Bearer {{tokenAdmin}}
 
-### 
+###
 # @name uploadFotos
 POST http://localhost:8000/api/pessoas/1/fotos
 Authorization: Bearer {{tokenAdmin}}
@@ -107,8 +107,24 @@ Content-Disposition: form-data; name="pes_id"
 
 2
 -----011000010111000001101001
-Content-Disposition: form-data; name="fotos[]"; filename="foto1.jpg"
+Content-Disposition: form-data; name="fotos[]"; filename="foto1.jpeg"
 Content-Type: image/jpeg
 
-< ./tests/images/photo1.jpg
+< ./tests/images/photo1.jpeg
+-----011000010111000001101001
+Content-Disposition: form-data; name="fotos[]"; filename="foto2.jpeg"
+Content-Type: image/jpeg
+
+< ./tests/images/photo2.jpeg
+-----011000010111000001101001
+Content-Disposition: form-data; name="fotos[]"; filename="foto3.jpeg"
+Content-Type: image/jpeg
+
+< ./tests/images/photo3.jpeg
+-----011000010111000001101001
+Content-Disposition: form-data; name="fotos[]"; filename="foto4.jpeg"
+Content-Type: image/jpeg
+
+< ./tests/images/photo4.jpeg
 -----011000010111000001101001--
+

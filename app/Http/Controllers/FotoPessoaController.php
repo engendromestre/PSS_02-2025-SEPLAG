@@ -20,51 +20,47 @@ class FotoPessoaController extends Controller
         $this->fotoPessoaService = $fotoPessoaService;
     }
 
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
    /**
      * @OA\Post(
-     *     path="/api/fotos",
+     *     path="/api/pessoas/{pessoa}/fotos",
      *     summary="Fazer upload de uma ou mais fotos para uma pessoa",
-     *     description="Upload de múltiplas fotos associadas a uma pessoa.",
+     *     description="Upload de múltiplas fotos associadas a uma pessoa. Permitido de 1 a 10 imagens.",
      *     operationId="uploadFotosPessoa",
      *     tags={"FotoPessoa"},
      *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="pessoa",
+     *         in="path",
+     *         required=true,
+     *         description="ID da pessoa",
+     *         @OA\Schema(type="integer")
+     *     ),
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\MediaType(
      *             mediaType="multipart/form-data",
      *             @OA\Schema(
-     *                 required={"pes_id", "fotos"},
+     *                 type="object",
+     *                 required={"fotos[]"},
      *                 @OA\Property(
-     *                     property="pes_id",
-     *                     type="integer",
-     *                     description="ID da pessoa"
-     *                 ),
-     *                 @OA\Property(
-     *                     property="fotos",
+     *                     property="fotos[]",
      *                     type="array",
+     *                     minItems=1,
+     *                     maxItems=10,
      *                     @OA\Items(
      *                         type="string",
-     *                         format="binary"
+     *                         format="binary",
+     *                         description="Arquivo de imagem (JPEG, PNG, JPG ou WEBP, máx: 5MB)"
      *                     ),
-     *                     description="Arquivos de imagem para upload"
+     *                     description="Array de imagens (máx: 10 arquivos, 5MB cada)"
      *                 )
-     *             )
+     *             ),
+     *             encoding={
+     *                 "fotos[]": {
+     *                     "style": "form",
+     *                     "explode": true
+     *                 }
+     *             }
      *         )
      *     ),
      *     @OA\Response(
@@ -77,22 +73,34 @@ class FotoPessoaController extends Controller
      *     ),
      *     @OA\Response(
      *         response=422,
-     *         description="Erro de validação"
+     *         description="Erro de validação",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="The fotos field is required."),
+     *             @OA\Property(property="errors", type="object")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,
      *         description="Não autorizado"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erro interno do servidor"
      *     )
      * )
      */
     public function store(StoreFotoPessoaRequest $request, Pessoa $pessoa)
     {
-        Gate::authorize('update', $pessoa);
-        
+         Gate::authorize('update', $pessoa);
+    
         try {
-            $fotos = $this->fotoPessoaService->armazenarFotos($request->file('fotos'),  $pessoa->pes_id);
+            // Garante que $fotos seja sempre um array
+            $fotos = $request->file('fotos');
+            $fotos = is_array($fotos) ? $fotos : [$fotos];
+            
+            $fotosSalvas = $this->fotoPessoaService->armazenarFotos($fotos, $pessoa->pes_id);
 
-            return FotoPessoaResource::collection(collect($fotos));
+            return FotoPessoaResource::collection(collect($fotosSalvas));
         } catch (Exception $e) {
             Log::error("Erro ao fazer upload das fotos: {$e->getMessage()}");
 
@@ -101,37 +109,5 @@ class FotoPessoaController extends Controller
                 'detalhes' => $e->getMessage()
             ], 500);
         }
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(FotoPessoa $fotoPessoa)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(FotoPessoa $fotoPessoa)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, FotoPessoa $fotoPessoa)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(FotoPessoa $fotoPessoa)
-    {
-        //
     }
 }
