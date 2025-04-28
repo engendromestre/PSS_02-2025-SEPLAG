@@ -3,23 +3,32 @@
     "info": {
         "title": "Documentação da API",
         "description": "API desenvolvida com Laravel Sanctum e documentada via Swagger",
+        "contact": {
+            "email": "suporte@example.com"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        },
         "version": "1.0.0"
     },
     "servers": [
         {
-            "url": "/",
+            "url": "http://localhost:8000",
             "description": "Ambiente local"
         }
     ],
     "paths": {
-        "/api/login": {
+        "/api/auth/login": {
             "post": {
                 "tags": [
                     "Autenticação"
                 ],
                 "summary": "Realiza login e retorna o token de acesso",
-                "operationId": "c373bc4cffa4a56fc64e3979b8ee7b96",
+                "description": "Autentica o usuário e retorna um token de acesso válido por 5 minutos",
+                "operationId": "authLogin",
                 "requestBody": {
+                    "description": "Credenciais de acesso",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -31,10 +40,12 @@
                                 "properties": {
                                     "email": {
                                         "type": "string",
+                                        "format": "email",
                                         "example": "admin@example.com"
                                     },
                                     "password": {
                                         "type": "string",
+                                        "format": "password",
                                         "example": "senha"
                                     }
                                 },
@@ -45,28 +56,180 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Login realizado com sucesso, retorna o token"
+                        "description": "Login realizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token": {
+                                            "type": "string",
+                                            "example": "1|abcdef123456"
+                                        },
+                                        "expires_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2023-12-31 23:59:59"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
-                        "description": "Credenciais inválidas"
+                        "description": "Credenciais inválidas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Credenciais inválidas"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validação falhou",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "O campo email é obrigatório."
+                                        },
+                                        "errors": {
+                                            "type": "object",
+                                            "example": {
+                                                "email": [
+                                                    "O campo email é obrigatório."
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": []
             }
         },
-        "/api/logout": {
+        "/api/auth/logout": {
             "post": {
                 "tags": [
                     "Autenticação"
                 ],
-                "summary": "Faz logout e revoga o token",
-                "operationId": "5ff2dc8b48bff52908d3821a0ecc9b3e",
+                "summary": "Faz logout e revoga o token atual",
+                "description": "Revoga o token de acesso atual do usuário",
+                "operationId": "authLogout",
                 "responses": {
                     "200": {
-                        "description": "Logout realizado com sucesso"
+                        "description": "Logout realizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Logout realizado com sucesso"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
-                        "description": "Não autorizado"
+                        "description": "Não autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/refresh": {
+            "post": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Renova o token de acesso",
+                "description": "Renova o token de acesso antes que expire (5 minutos de validade). Requer autenticação.",
+                "operationId": "refreshToken",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "force": {
+                                        "description": "Forçar renovação mesmo com token válido",
+                                        "type": "boolean",
+                                        "example": false
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Token renovado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token": {
+                                            "type": "string",
+                                            "example": "2|ghijk789012"
+                                        },
+                                        "expires_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2025-04-30 15:30:00"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -675,8 +838,9 @@
             }
         },
         "securitySchemes": {
-            "bearerAuth": {
+            "sanctum": {
                 "type": "http",
+                "description": "Autenticação via Sanctum. Use o token retornado no login.",
                 "bearerFormat": "JWT",
                 "scheme": "bearer"
             }
@@ -685,7 +849,7 @@
     "tags": [
         {
             "name": "Autenticação",
-            "description": "Autenticação"
+            "description": "Endpoints para gerenciamento de autenticação"
         },
         {
             "name": "FotoPessoa",

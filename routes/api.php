@@ -6,14 +6,19 @@ use App\Http\Controllers\FotoPessoaController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+// Rotas públicas (sem autenticação)
+Route::prefix('auth')->group(function () {
+    Route::post('login', [AuthController::class, 'login'])->name('auth.login');
+});
 
-Route::post('/login', [AuthController::class, 'login'])->name('login');
-Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+// Rotas protegidas (requerem autenticação)
+Route::middleware('auth:sanctum')->prefix('auth')->group(function () {
+    Route::post('logout', [AuthController::class, 'logout'])->name('auth.logout');
+    Route::post('refresh', [AuthController::class, 'refreshToken'])->name('auth.refresh');
+});
 
 Route::middleware('auth:sanctum')->group(function () {
+
     Route::middleware('checkRole:admin,editor')->group(function () {
         Route::post('/pessoas', [PessoaController::class, 'store'])->name('pessoas.store');
         Route::put('/pessoas/{pessoa}', [PessoaController::class, 'update'])->name('pessoas.update');
