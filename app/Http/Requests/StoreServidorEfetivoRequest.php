@@ -4,14 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreUnidadeRequest extends FormRequest
+class StoreServidorEfetivoRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return $this->user()->can('create', Unidade::class);
+        return false;
     }
 
     /**
@@ -22,8 +22,7 @@ class StoreUnidadeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'unid_nome' => 'required|string|max:200',
-            'unid_sigla' => 'required|string|max:20'
+            //
         ];
     }
 }

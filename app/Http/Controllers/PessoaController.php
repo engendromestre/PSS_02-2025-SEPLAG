@@ -89,6 +89,7 @@ class PessoaController extends Controller
      */
     public function store(StorePessoaRequest $request)
     {
+        Gate::authorize('create', $pessoa);
         $pessoa = Pessoa::create($request->validated());
 
         return (new PessoaResource($pessoa))
@@ -99,7 +100,7 @@ class PessoaController extends Controller
     /**
      * @OA\Get(
      *     path="/api/pessoas/{id}",
-     *     summary="Exibir uma pessoa pelo ID",
+     *     summary="Exibir uma pessoa específica",
      *     tags={"Pessoa"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
@@ -154,7 +155,7 @@ class PessoaController extends Controller
     /**
      * @OA\Put(
      *     path="/api/pessoas/{id}",
-     *     summary="Atualizar uma pessoa pelo ID",
+     *     summary="Atualizar uma pessoa",
      *     tags={"Pessoa"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
@@ -189,10 +190,10 @@ class PessoaController extends Controller
     /**
      * @OA\Delete(
      *     path="/api/pessoas/{id}",
-     *     summary="Excluir uma pessoa pelo ID",
+     *     summary="Excluir uma pessoa",
      *     tags={"Pessoa"},
      *     security={{"bearerAuth":{}}},
-     *     @OA\Parameter(
+     *     @OA\Parameter( 
      *         name="id",
      *         in="path",
      *         required=true,

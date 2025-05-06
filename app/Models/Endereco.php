@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Endereco extends Model
 {
+    protected $primaryKey = 'end_id';
     protected $fillable = ['end_tipo_logradouro', 'end_logradouro', 'end_numero', 'end_bairro', 'cid_id'];
 
     /**

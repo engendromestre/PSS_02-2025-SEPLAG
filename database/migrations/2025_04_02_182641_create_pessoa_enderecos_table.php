@@ -15,7 +15,6 @@ return new class extends Migration
         Schema::create('pessoa_enderecos', function (Blueprint $table) {
             $table->unsignedBigInteger('pes_id');
             $table->unsignedBigInteger('end_id');
-            $table->timestamps();
 
             $table->primary(['pes_id', 'end_id']);
         });

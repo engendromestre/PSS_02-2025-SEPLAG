@@ -452,7 +452,7 @@
                 "tags": [
                     "Pessoa"
                 ],
-                "summary": "Exibir uma pessoa pelo ID",
+                "summary": "Exibir uma pessoa específica",
                 "operationId": "9767860b5875b66fc3535a00d47aec2d",
                 "parameters": [
                     {
@@ -545,7 +545,7 @@
                 "tags": [
                     "Pessoa"
                 ],
-                "summary": "Atualizar uma pessoa pelo ID",
+                "summary": "Atualizar uma pessoa",
                 "operationId": "da7d1255c980a411d322994cbca98632",
                 "parameters": [
                     {
@@ -596,7 +596,7 @@
                 "tags": [
                     "Pessoa"
                 ],
-                "summary": "Excluir uma pessoa pelo ID",
+                "summary": "Excluir uma pessoa",
                 "operationId": "6ac497549c4c86a2d7bbd144d43dffb3",
                 "parameters": [
                     {
@@ -664,6 +664,242 @@
                                         }
                                     },
                                     "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/unidades": {
+            "get": {
+                "tags": [
+                    "Unidade"
+                ],
+                "summary": "Listar unidades",
+                "operationId": "0c9baef10d156dabf3eeb1740c369edf",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Número da página",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de unidades paginada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Unidade"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Unidade"
+                ],
+                "summary": "Cadastrar nova unidade",
+                "operationId": "630809295267e4bd587485d8a29519a2",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Unidade"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Unidade criada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Unidade"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/unidades/{id}": {
+            "get": {
+                "tags": [
+                    "Unidade"
+                ],
+                "summary": "Exibir unidade específica",
+                "operationId": "460b6c13458ccbe2b8584cd7097d9a0a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Unidade encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Unidade"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Unidade não encontrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Unidade"
+                ],
+                "summary": "Atualizar unidade",
+                "operationId": "323706e2f822d031fdeebebd9013f931",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Unidade"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Unidade atualizada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Unidade"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Unidade"
+                ],
+                "summary": "Excluir unidade",
+                "operationId": "a52327e7319d99b373e840cef59c1afa",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Unidade excluída"
+                    },
+                    "403": {
+                        "description": "Unidade possui lotações ativas"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/unidades/{unidade}/servidores-efetivos": {
+            "get": {
+                "tags": [
+                    "Unidade"
+                ],
+                "summary": "Listar servidores efetivos da unidade",
+                "operationId": "d55c76ef16ce60f5c6ed0c820a725448",
+                "parameters": [
+                    {
+                        "name": "unidade",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de servidores efetivos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Pessoa"
+                                    }
                                 }
                             }
                         }
@@ -806,6 +1042,36 @@
                 },
                 "type": "object"
             },
+            "Unidade": {
+                "title": "Unidade",
+                "properties": {
+                    "unid_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "unid_nome": {
+                        "type": "string",
+                        "example": "Secretaria da Educação"
+                    },
+                    "unid_sigla": {
+                        "type": "string",
+                        "example": "SED"
+                    },
+                    "enderecos": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    },
+                    "lotacoes": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
             "User": {
                 "title": "User",
                 "properties": {
@@ -858,6 +1124,10 @@
         {
             "name": "Pessoa",
             "description": "Pessoa"
+        },
+        {
+            "name": "Unidade",
+            "description": "Unidade"
         }
     ],
     "security": {

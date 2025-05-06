@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Lotacao extends Model
 {
-    protected $table = 'locacoes';
+    protected $table = 'lotacoes';
+    protected $primaryKey = 'lot_id';
     protected $fillable = ['pes_id', 'unid_id', 'lot_data_lotacao', 'lot_data_remocao', 'lot_portaria'];
 
     /**

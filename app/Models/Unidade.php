@@ -4,10 +4,12 @@ namespace App\Models;
 
 use App\Models\Lotacao;
 use App\Models\Endereco;
+use App\Models\UnidadeEndereco;
 use Illuminate\Database\Eloquent\Model;
 
 class Unidade extends Model
 {
+    protected $primaryKey = 'unid_id';
     protected $fillable = ['unid_nome', 'unid_sigla'];
 
     /**
@@ -27,15 +29,21 @@ class Unidade extends Model
     /**
      * Get all enderecos associated with this unidade through the unidade_enderecos pivot table.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
      *
      * @property int $unid_id The unique identifier of the unidade.
      *
      * @see \App\Models\Endereco
      * @see \App\Models\UnidadeEndereco
-     */ 
+     */
     public function enderecos()
     {
-        return $this->belongsToMany(Endereco::class, 'unidade_enderecos', 'unid_id', 'end_id');
+        return $this->belongsToMany(
+            Endereco::class,
+            'unidade_enderecos',
+            'unid_id',
+            'end_id'
+        );
     }
+
 }
